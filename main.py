@@ -3,16 +3,16 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
 
-
 # Load the face detector and the trained emotion detection model
 face_classifier = cv2.CascadeClassifier(r'C:\Users\rajku\OneDrive\Dokument\GitHub\Emotion_Detection_CNN\haarcascade_frontalface_default.xml')
-classifier = load_model(r'C:\Users\rajku\OneDrive\Dokument\GitHub\Emotion_Detection_CNN\model.h5')
+classifier = load_model(r'C:\Users\rajku\OneDrive\Dokument\GitHub\Emotion_Detection_CNN\my_model.keras')
 
 # Define the emotion labels
 emotion_labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
 
 # Start video capture
 cap = cv2.VideoCapture(0)
+image_count = 0  # Counter for saved images
 
 while True:
     # Capture frame-by-frame
@@ -53,8 +53,17 @@ while True:
     # Display the resulting frame
     cv2.imshow('Emotion Detector', frame)
     
+    # Wait for a key press
+    key = cv2.waitKey(1) & 0xFF
+    
+    # If any key is pressed, save the current frame
+    if key== ord('s'):
+        image_count += 1
+        image_filename = f"detected_face_{image_count}.jpg"
+        cv2.imwrite(image_filename, frame)
+    
     # Break the loop if 'q' is pressed
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if key == ord('q'):
         break
 
 # Release the video capture and close windows
